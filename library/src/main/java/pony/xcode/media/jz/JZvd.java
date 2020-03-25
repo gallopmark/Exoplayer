@@ -108,7 +108,7 @@ public abstract class JZvd extends FrameLayout implements View.OnClickListener, 
 
     private int mNormalWidth, mNormalHeight; //小屏播放时的窗口宽高，设置之后退出全屏缩放到此宽高
     private ViewGroup.LayoutParams mNormalLayoutParams;
-    private OnFullscreenClickListener mOnFullscreenClickListener;
+    private OnScreenChangedListener mOnScreenChangedListener;
 
     public JZvd(Context context) {
         super(context);
@@ -202,18 +202,14 @@ public abstract class JZvd extends FrameLayout implements View.OnClickListener, 
             increaseVolume();
             //showToastSound(mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC)+"");
         } else if (i == R.id.jzvd_fullscreen_iv) {
-            if (mOnFullscreenClickListener == null) {
-                Logger.i(TAG, "onClick fullscreen [" + this.hashCode() + "] ");
-                if (state == STATE_AUTO_COMPLETE) return;
-                if (screen == SCREEN_FULLSCREEN) {
-                    //quit fullscreen
-                    backPress();
-                } else {
-                    Logger.d("toFullscreenActivity [" + this.hashCode() + "] ");
-                    gotoScreenFullscreen();
-                }
+            Logger.i(TAG, "onClick fullscreen [" + this.hashCode() + "] ");
+            if (state == STATE_AUTO_COMPLETE) return;
+            if (screen == SCREEN_FULLSCREEN) {
+                //quit fullscreen
+                backPress();
             } else {
-                mOnFullscreenClickListener.onClick(fullscreenButton);
+                Logger.d("toFullscreenActivity [" + this.hashCode() + "] ");
+                gotoScreenFullscreen();
             }
         }
     }
@@ -789,16 +785,24 @@ public abstract class JZvd extends FrameLayout implements View.OnClickListener, 
 
     public void gotoScreenFullscreen() {
         ViewGroup vg = (ViewGroup) getParent();
-        vg.removeView(this);
+        if (vg != null) {
+            vg.removeView(this);
+        }
+        if (vg == null) {
+            vg = (ViewGroup) (JZUtils.scanForActivity(getContext())).getWindow().getDecorView();
+        }
         cloneAJzvd(vg);
         CONTAINER_LIST.add(vg);
-        vg = (ViewGroup) (JZUtils.scanForActivity(getContext())).getWindow().getDecorView();//和他也没有关系
+//        vg = (ViewGroup) (JZUtils.scanForActivity(getContext())).getWindow().getDecorView();
         vg.addView(this, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         setScreenFullscreen();
         JZUtils.hideStatusBar(getContext());
         JZUtils.setRequestedOrientation(getContext(), FULLSCREEN_ORIENTATION);
         JZUtils.hideSystemUI(getContext());//华为手机和有虚拟键的手机全屏时可隐藏虚拟键 issue:1326
+        if (mOnScreenChangedListener != null) {
+            mOnScreenChangedListener.onScreenChanged(true);
+        }
     }
 
     public void setVideoSize(int videoWidth, int videoHeight) {
@@ -813,7 +817,10 @@ public abstract class JZvd extends FrameLayout implements View.OnClickListener, 
 
     public void gotoScreenNormal() {//goback本质上是goto
         gobakFullscreenTime = System.currentTimeMillis();//退出全屏
-        ViewGroup vg = (ViewGroup) (JZUtils.scanForActivity(getContext())).getWindow().getDecorView();
+        ViewGroup vg = (ViewGroup) getParent();
+        if (vg == null) {
+            vg = (ViewGroup) (JZUtils.scanForActivity(getContext())).getWindow().getDecorView();
+        }
         vg.removeView(this);
         CONTAINER_LIST.getLast().removeAllViews();
         ViewGroup.LayoutParams lp;
@@ -835,6 +842,9 @@ public abstract class JZvd extends FrameLayout implements View.OnClickListener, 
         JZUtils.showStatusBar(getContext());
         JZUtils.setRequestedOrientation(getContext(), NORMAL_ORIENTATION);
         JZUtils.showSystemUI(getContext());
+        if (mOnScreenChangedListener != null) {
+            mOnScreenChangedListener.onScreenChanged(false);
+        }
     }
 
     public void setScreenNormal() {
@@ -1086,11 +1096,11 @@ public abstract class JZvd extends FrameLayout implements View.OnClickListener, 
      * 全屏按钮点击
      * 返回true 拦截 false 不拦截
      */
-    public interface OnFullscreenClickListener {
-        void onClick(ImageView fullscreenButton);
+    public interface OnScreenChangedListener {
+        void onScreenChanged(boolean isFullscreen);
     }
 
-    public void setOnFullscreenClickListener(OnFullscreenClickListener l) {
-        this.mOnFullscreenClickListener = l;
+    public void setOnScreenChangedListener(OnScreenChangedListener l) {
+        this.mOnScreenChangedListener = l;
     }
 }

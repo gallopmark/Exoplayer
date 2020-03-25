@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import pony.xcode.media.exo.ExoMediaInterface;
@@ -29,10 +31,14 @@ public class MainActivity extends AppCompatActivity {
         lp.height = height;
         videoView.setLayoutParams(lp);
         videoView.setVideoSize(width, height, lp);
-        videoView.setFullscreenEnabled(false);
         videoView.setUp("https://file.holike.com/miniprogram/test/video/5f839692-8eeb-40e0-aa69-aee594e73ada.mp4"
                 , "", JZvd.SCREEN_NORMAL, ExoMediaInterface.class);
         videoView.autoStart();
+        final FrameLayout container = findViewById(R.id.container);
+        videoView.setOnScreenChangedListener(isFullscreen -> {
+//            container.removeView(findViewById(R.id.tv));
+//            LayoutInflater.from(this).inflate(R.layout.include_helow,container,true);
+        });
 //        videoView.setOnFullscreenClickListener(new Jzvd.OnFullscreenClickListener() {
 //            @Override
 //            public boolean onClick() {
