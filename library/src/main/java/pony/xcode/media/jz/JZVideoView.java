@@ -98,7 +98,7 @@ public class JZVideoView extends JZvd {
         mRetryBtn = findViewById(R.id.jzvd_retry_btn_tv);
         mRetryLayout = findViewById(R.id.jzvd_retry_layout_ll);
 
-        thumbImageView.setOnClickListener(this);
+//        thumbImageView.setOnClickListener(this);
         backButton.setOnClickListener(this);
         tinyBackImageView.setOnClickListener(this);
         clarityTextView.setOnClickListener(this);
@@ -212,28 +212,29 @@ public class JZVideoView extends JZvd {
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        int i = v.getId();
-        if (i == R.id.jzvd_thumb_iv) {
-            if (jzDataSource != null && jzDataSource.urlsMap.isEmpty() && jzDataSource.getCurrentUrl() != null) {
-                if (state == STATE_NORMAL) {
-                    if (!jzDataSource.getCurrentUrl().toString().startsWith("file") &&
-                            !jzDataSource.getCurrentUrl().toString().startsWith("/") &&
-                            !JZUtils.isWifiConnected(getContext()) && !WIFI_TIP_DIALOG_SHOWED) {
-                        showWifiDialog();
-                        return;
-                    }
-                    startVideo();
-                } else if (state == STATE_AUTO_COMPLETE) {
-                    onClickUiToggle();
-                }
-            }
-        } else if (i == R.id.surface_container) {
+        int viewId = v.getId();
+//        if (viewId == R.id.jzvd_thumb_iv) {
+//            if (jzDataSource != null && jzDataSource.urlsMap.isEmpty() && jzDataSource.getCurrentUrl() != null) {
+//                if (state == STATE_NORMAL) {
+//                    if (!jzDataSource.getCurrentUrl().toString().startsWith("file") &&
+//                            !jzDataSource.getCurrentUrl().toString().startsWith("/") &&
+//                            !JZUtils.isWifiConnected(getContext()) && !WIFI_TIP_DIALOG_SHOWED) {
+//                        showWifiDialog();
+//                        return;
+//                    }
+//                    startVideo();
+//                } else if (state == STATE_AUTO_COMPLETE) {
+//                    onClickUiToggle();
+//                }
+//            }
+//        } else
+        if (viewId == R.id.surface_container) {
             startDismissControlViewTimer();
-        } else if (i == R.id.jzvd_back_iv) {
+        } else if (viewId == R.id.jzvd_back_iv) {
             backPress();
-        } else if (i == R.id.jzvd_back_tiny_iv) {
+        } else if (viewId == R.id.jzvd_back_tiny_iv) {
             clearFloatScreen();
-        } else if (i == R.id.jzvd_clarity_tv) {
+        } else if (viewId == R.id.jzvd_clarity_tv) {
             @SuppressLint("InflateParams") final LinearLayout layout = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.jz_layout_clarity, null);
             OnClickListener qualityListener = new OnClickListener() {
                 @Override
@@ -273,7 +274,7 @@ public class JZVideoView extends JZvd {
             int offsetX = clarityTextView.getMeasuredWidth() / 3;
             int offsetY = clarityTextView.getMeasuredHeight() / 3;
             clarityPopWindow.update(clarityTextView, -offsetX, -offsetY, Math.round(layout.getMeasuredWidth() * 2), layout.getMeasuredHeight());
-        } else if (i == R.id.jzvd_retry_btn_tv) {
+        } else if (viewId == R.id.jzvd_retry_btn_tv) {
             if (jzDataSource.urlsMap.isEmpty() || jzDataSource.getCurrentUrl() == null) {
                 Toast.makeText(getContext(), getResources().getString(R.string.no_url), Toast.LENGTH_SHORT).show();
                 return;
@@ -431,7 +432,7 @@ public class JZVideoView extends JZvd {
         }
     }
 
-    public void onCLickUiToggleToClear() {
+    public void onClickUiToggleToClear() {
         if (state == STATE_PREPARING) {
             if (bottomContainer.getVisibility() == View.VISIBLE) {
                 changeUiToPreparing();
@@ -638,7 +639,7 @@ public class JZVideoView extends JZvd {
         } else {
             mDialogIcon.setBackgroundResource(R.drawable.jz_backward_icon);
         }
-        onCLickUiToggleToClear();
+        onClickUiToggleToClear();
     }
 
     @Override
@@ -675,7 +676,7 @@ public class JZVideoView extends JZvd {
         }
         mDialogVolumeTextView.setText(volumePercent + "%");
         mDialogVolumeProgressBar.setProgress(volumePercent);
-        onCLickUiToggleToClear();
+        onClickUiToggleToClear();
     }
 
     @Override
@@ -706,7 +707,7 @@ public class JZVideoView extends JZvd {
         }
         mDialogBrightnessTextView.setText(brightnessPercent + "%");
         mDialogBrightnessProgressBar.setProgress(brightnessPercent);
-        onCLickUiToggleToClear();
+        onClickUiToggleToClear();
     }
 
     @Override
