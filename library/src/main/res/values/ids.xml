@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="jzvd_thumb_iv" type="id" />
+    <item name="jzvd_layout_bottom_ll" type="id"/>
+    <item name="jzvd_bottom_play_iv" type="id"/>
+    <item name="jzvd_current_time_tv" type="id"/>
+    <item name="jzvd_bottom_seek_progress_sb" type="id"/>
+    <item name="jzvd_total_time_tv" type="id"/>
+    <item name="jzvd_clarity_tv" type="id"/>
+    <item name="jzvd_bottom_volume_box_ll" type="id"/>
+    <item name="jzvd_bottom_volume_min_iv" type="id"/>
+    <item name="jzvd_bottom_volume_max_iv" type="id"/>
+    <item name="jzvd_bottom_volume_seek_progress_sb" type="id"/>
+    <item name="jzvd_fullscreen_iv" type="id"/>
+    <item name="jzvd_bottom_progress_pb" type="id"/>
+    <item name="jzvd_back_tiny_iv" type="id"/>
+    <item name="jzvd_layout_top_rl" type="id"/>
+    <item name="jzvd_back_iv" type="id"/>
+    <item name="jzvd_title_tv" type="id"/>
+    <item name="jzvd_battery_time_layout_ll" type="id"/>
+    <item name="jzvd_battery_level_iv" type="id"/>
+    <item name="jzvd_video_current_time_tv" type="id"/>
+    <item name="jzvd_loading_pb" type="id"/>
+    <item name="jzvd_start_iv" type="id"/>
+    <item name="jzvd_replay_text_tv" type="id"/>
+    <item name="jzvd_retry_layout_ll" type="id"/>
+    <item name="jzvd_retry_btn_tv" type="id"/>
+</resources>
