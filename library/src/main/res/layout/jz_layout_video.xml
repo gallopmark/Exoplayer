@@ -38,8 +38,6 @@
             android:id="@id/jzvd_bottom_play_iv"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
             android:padding="12dp"
             android:src="@drawable/jz_videos_pause" />
 
