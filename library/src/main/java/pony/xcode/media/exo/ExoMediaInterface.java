@@ -88,6 +88,10 @@ public class ExoMediaInterface extends JZMediaInterface implements VideoListener
     @Override
     public void release() {
         if (mExoPlayer != null) {
+            if (handler != null) {
+                handler.removeCallbacksAndMessages(null);
+                handler = null;
+            }
             mExoPlayer.release();
             mSavedSurface = null;
             mExoPlayer = null;
@@ -168,11 +172,13 @@ public class ExoMediaInterface extends JZMediaInterface implements VideoListener
     @Override
     public void onPlayerStateChanged(final boolean playWhenReady, int playbackState) {
         if (playbackState == Player.STATE_BUFFERING) {
-            if (handler != null && mExoPlayer != null) {
+            if (handler != null) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        jzvd.setBufferProgress(mExoPlayer.getBufferedPercentage());
+                        if (mExoPlayer != null) {
+                            jzvd.setBufferProgress(mExoPlayer.getBufferedPercentage());
+                        }
                     }
                 });
             }
