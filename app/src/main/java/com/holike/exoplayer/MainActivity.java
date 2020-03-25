@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         lp.height = height;
         videoView.setLayoutParams(lp);
         videoView.setVideoSize(width, height, lp);
+        videoView.setFullscreenEnabled(false);
         videoView.setUp("https://file.holike.com/miniprogram/test/video/5f839692-8eeb-40e0-aa69-aee594e73ada.mp4"
                 , "", JZvd.SCREEN_NORMAL, ExoMediaInterface.class);
         videoView.autoStart();
