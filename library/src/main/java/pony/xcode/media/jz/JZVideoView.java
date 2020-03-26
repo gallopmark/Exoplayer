@@ -213,25 +213,10 @@ public class JZVideoView extends JZvd {
     public void onClick(View v) {
         super.onClick(v);
         int viewId = v.getId();
-//        if (viewId == R.id.jzvd_thumb_iv) {
-//            if (jzDataSource != null && jzDataSource.urlsMap.isEmpty() && jzDataSource.getCurrentUrl() != null) {
-//                if (state == STATE_NORMAL) {
-//                    if (!jzDataSource.getCurrentUrl().toString().startsWith("file") &&
-//                            !jzDataSource.getCurrentUrl().toString().startsWith("/") &&
-//                            !JZUtils.isWifiConnected(getContext()) && !WIFI_TIP_DIALOG_SHOWED) {
-//                        showWifiDialog();
-//                        return;
-//                    }
-//                    startVideo();
-//                } else if (state == STATE_AUTO_COMPLETE) {
-//                    onClickUiToggle();
-//                }
-//            }
-//        } else
         if (viewId == R.id.surface_container) {
             startDismissControlViewTimer();
         } else if (viewId == R.id.jzvd_back_iv) {
-            backPress();
+            backPressed();
         } else if (viewId == R.id.jzvd_back_tiny_iv) {
             clearFloatScreen();
         } else if (viewId == R.id.jzvd_clarity_tv) {

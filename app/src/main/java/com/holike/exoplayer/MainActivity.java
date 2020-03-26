@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.FrameLayout;
 
 import pony.xcode.media.exo.ExoMediaInterface;
@@ -30,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         lp.width = width;
         lp.height = height;
         videoView.setLayoutParams(lp);
-        videoView.setVideoSize(width, height, lp);
+        videoView.setVideoNormalSize(width, height, lp);
         videoView.setUp("https://file.holike.com/miniprogram/test/video/5f839692-8eeb-40e0-aa69-aee594e73ada.mp4"
                 , "", JZvd.SCREEN_NORMAL, ExoMediaInterface.class);
         videoView.autoStart();
@@ -77,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (JZvd.backPress()) {
+        if (videoView.backPressed()) {
             return;
         }
         super.onBackPressed();

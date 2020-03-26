@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ContextThemeWrapper;
 
@@ -46,6 +48,7 @@ public class JZUtils {
      */
     public static boolean isWifiConnected(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager == null) return false;
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI;
     }
@@ -56,16 +59,13 @@ public class JZUtils {
      * @param context context
      * @return object of Activity or null if it is not Activity
      */
-    public static Activity scanForActivity(Context context) {
-        if (context == null) return null;
-
+    @NonNull
+    public static Activity scanForActivity(@NonNull Context context) {
         if (context instanceof Activity) {
             return (Activity) context;
-        } else if (context instanceof ContextWrapper) {
+        } else {
             return scanForActivity(((ContextWrapper) context).getBaseContext());
         }
-
-        return null;
     }
 
     /**
@@ -74,6 +74,7 @@ public class JZUtils {
      * @param context context
      * @return AppCompatActivity if it's not null
      */
+    @Nullable
     public static AppCompatActivity getAppCompActivity(Context context) {
         if (context == null) return null;
         if (context instanceof AppCompatActivity) {
@@ -85,26 +86,22 @@ public class JZUtils {
     }
 
     public static void setRequestedOrientation(Context context, int orientation) {
-        if (JZUtils.getAppCompActivity(context) != null) {
-            JZUtils.getAppCompActivity(context).setRequestedOrientation(
-                    orientation);
+        AppCompatActivity acAct = getAppCompActivity(context);
+        if (acAct != null) {
+            acAct.setRequestedOrientation(orientation);
         } else {
-            JZUtils.scanForActivity(context).setRequestedOrientation(
-                    orientation);
+            scanForActivity(context).setRequestedOrientation(orientation);
         }
     }
 
+    @NonNull
     public static Window getWindow(Context context) {
-        if (JZUtils.getAppCompActivity(context) != null) {
-            return JZUtils.getAppCompActivity(context).getWindow();
+        AppCompatActivity acAct = getAppCompActivity(context);
+        if (acAct != null) {
+            return acAct.getWindow();
         } else {
             return JZUtils.scanForActivity(context).getWindow();
         }
-    }
-
-    public static int dip2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
     }
 
     public static void saveProgress(Context context, Object url, long progress) {
@@ -113,16 +110,14 @@ public class JZUtils {
         if (progress < 5000) {
             progress = 0;
         }
-        SharedPreferences spn = context.getSharedPreferences("JZVD_PROGRESS",
-                Context.MODE_PRIVATE);
+        SharedPreferences spn = context.getSharedPreferences("JZVD_PROGRESS", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = spn.edit();
         editor.putLong("newVersion:" + url.toString(), progress).apply();
     }
 
     public static long getSavedProgress(Context context, Object url) {
         if (!JZvd.SAVE_PROGRESS) return 0;
-        SharedPreferences spn = context.getSharedPreferences("JZVD_PROGRESS",
-                Context.MODE_PRIVATE);
+        SharedPreferences spn = context.getSharedPreferences("JZVD_PROGRESS", Context.MODE_PRIVATE);
         return spn.getLong("newVersion:" + url.toString(), 0);
     }
 
@@ -134,12 +129,10 @@ public class JZUtils {
      */
     public static void clearSavedProgress(Context context, Object url) {
         if (url == null) {
-            SharedPreferences spn = context.getSharedPreferences("JZVD_PROGRESS",
-                    Context.MODE_PRIVATE);
+            SharedPreferences spn = context.getSharedPreferences("JZVD_PROGRESS", Context.MODE_PRIVATE);
             spn.edit().clear().apply();
         } else {
-            SharedPreferences spn = context.getSharedPreferences("JZVD_PROGRESS",
-                    Context.MODE_PRIVATE);
+            SharedPreferences spn = context.getSharedPreferences("JZVD_PROGRESS", Context.MODE_PRIVATE);
             spn.edit().putLong("newVersion:" + url.toString(), 0).apply();
         }
     }
@@ -147,7 +140,7 @@ public class JZUtils {
     @SuppressLint("RestrictedApi")
     public static void showStatusBar(Context context) {
         if (JZvd.TOOL_BAR_EXIST) {
-            JZUtils.getWindow(context).clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow(context).clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
     }
 
@@ -155,7 +148,7 @@ public class JZUtils {
     @SuppressLint("RestrictedApi")
     public static void hideStatusBar(Context context) {
         if (JZvd.TOOL_BAR_EXIST) {
-            JZUtils.getWindow(context).setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+           getWindow(context).setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
     }
 
@@ -168,12 +161,12 @@ public class JZUtils {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             uiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         }
-        SYSTEM_UI = JZUtils.getWindow(context).getDecorView().getSystemUiVisibility();
-        JZUtils.getWindow(context).getDecorView().setSystemUiVisibility(uiOptions);
+        SYSTEM_UI = getWindow(context).getDecorView().getSystemUiVisibility();
+        getWindow(context).getDecorView().setSystemUiVisibility(uiOptions);
     }
 
     @SuppressLint("NewApi")
     public static void showSystemUI(Context context) {
-        JZUtils.getWindow(context).getDecorView().setSystemUiVisibility(SYSTEM_UI);
+        getWindow(context).getDecorView().setSystemUiVisibility(SYSTEM_UI);
     }
 }
