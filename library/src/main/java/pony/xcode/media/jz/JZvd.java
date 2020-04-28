@@ -54,7 +54,7 @@ public abstract class JZvd extends FrameLayout implements View.OnClickListener, 
     public static int FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
     public static int NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
     public static boolean SAVE_PROGRESS = false;
-    public static boolean WIFI_TIP_DIALOG_SHOWED = false;
+    public static boolean NOT_WIFI_ENABLE = false;
     public static int VIDEO_IMAGE_DISPLAY_TYPE = VIDEO_IMAGE_DISPLAY_TYPE_FILL_PARENT;
     public static long lastAutoFullscreenTime = 0;
     public static final int THRESHOLD = 80;
@@ -68,7 +68,7 @@ public abstract class JZvd extends FrameLayout implements View.OnClickListener, 
     public Class mediaInterfaceClass;
     public JZMediaInterface mediaInterface;
     public int videoRotation = 0;
-    protected long gobakFullscreenTime = 0;//这个应该重写一下，刷新列表，新增列表的刷新，不打断播放，应该是个flag
+    protected long goBackFullscreenTime = 0;//这个应该重写一下，刷新列表，新增列表的刷新，不打断播放，应该是个flag
 
     public int seekToManulPosition = -1;
     public long seekToInAdvance = 0;
@@ -175,7 +175,7 @@ public abstract class JZvd extends FrameLayout implements View.OnClickListener, 
     }
 
     public void setUp(JZDataSource jzDataSource, int screen, Class mediaInterfaceClass) {
-        if ((System.currentTimeMillis() - gobakFullscreenTime) < 200) return;
+        if ((System.currentTimeMillis() - goBackFullscreenTime) < 200) return;
         this.jzDataSource = jzDataSource;
         this.screen = screen;
         onStateNormal();
@@ -240,9 +240,9 @@ public abstract class JZvd extends FrameLayout implements View.OnClickListener, 
             return;
         }
         if (state == STATE_NORMAL) {
-            if (!jzDataSource.getCurrentUrl().toString().startsWith("file") && !
-                    jzDataSource.getCurrentUrl().toString().startsWith("/") &&
-                    !JZUtils.isWifiConnected(getContext()) && !WIFI_TIP_DIALOG_SHOWED) {//这个可以放到std中
+            String url = jzDataSource.getCurrentUrl().toString();
+            if (!url.startsWith("file") && !url.startsWith("/") &&
+                    !JZUtils.isWifiConnected(getContext()) && NOT_WIFI_ENABLE) {//这个可以放到std中
                 showWifiDialog();
                 return;
             }
@@ -803,7 +803,7 @@ public abstract class JZvd extends FrameLayout implements View.OnClickListener, 
 
     //切换到普通窗口模式
     public void gotoScreenNormal() {//goback本质上是goto
-        gobakFullscreenTime = System.currentTimeMillis();//退出全屏
+        goBackFullscreenTime = System.currentTimeMillis();//退出全屏
         ViewGroup.LayoutParams lp;
         if (mNormalLayoutParams != null) {
             lp = mNormalLayoutParams;
@@ -1057,6 +1057,11 @@ public abstract class JZvd extends FrameLayout implements View.OnClickListener, 
     //设置是否打印信息
     public static void setDebugMode(boolean isDebug) {
         Logger.LOG_DEBUG = isDebug;
+    }
+
+    //设置非wifi网络下是否提醒
+    public static void setNotWifiTip(boolean enable) {
+        NOT_WIFI_ENABLE = enable;
     }
 
     //设置底部音量调节布局是否可见

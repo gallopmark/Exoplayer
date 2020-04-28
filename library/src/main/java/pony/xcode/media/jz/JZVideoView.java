@@ -264,9 +264,8 @@ public class JZVideoView extends JZvd {
                 Toast.makeText(getContext(), getResources().getString(R.string.no_url), Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (!jzDataSource.getCurrentUrl().toString().startsWith("file") && !
-                    jzDataSource.getCurrentUrl().toString().startsWith("/") &&
-                    !JZUtils.isWifiConnected(getContext()) && !WIFI_TIP_DIALOG_SHOWED) {
+            String url = jzDataSource.getCurrentUrl().toString();
+            if (!url.startsWith("file") && !url.startsWith("/") && !JZUtils.isWifiConnected(getContext()) && NOT_WIFI_ENABLE) {
                 showWifiDialog();
                 return;
             }
@@ -324,7 +323,6 @@ public class JZVideoView extends JZvd {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 startVideo();
-                WIFI_TIP_DIALOG_SHOWED = true;
             }
         });
         builder.setNegativeButton(getResources().getString(R.string.tips_not_wifi_cancel), new DialogInterface.OnClickListener() {
@@ -617,7 +615,8 @@ public class JZVideoView extends JZvd {
         }
 
         mDialogSeekTime.setText(seekTime);
-        mDialogTotalTime.setText(" / " + totalTime);
+        String totalTimeText = " / " + totalTime;
+        mDialogTotalTime.setText(totalTimeText);
         mDialogProgressBar.setProgress(totalTimeDuration <= 0 ? 0 : (int) (seekTimePosition * 100 / totalTimeDuration));
         if (deltaX > 0) {
             mDialogIcon.setBackgroundResource(R.drawable.jz_forward_icon);
@@ -659,7 +658,8 @@ public class JZVideoView extends JZvd {
         } else if (volumePercent < 0) {
             volumePercent = 0;
         }
-        mDialogVolumeTextView.setText(volumePercent + "%");
+        String volumeText = volumePercent + "%";
+        mDialogVolumeTextView.setText(volumeText);
         mDialogVolumeProgressBar.setProgress(volumePercent);
         onClickUiToggleToClear();
     }
@@ -690,7 +690,8 @@ public class JZVideoView extends JZvd {
         } else if (brightnessPercent < 0) {
             brightnessPercent = 0;
         }
-        mDialogBrightnessTextView.setText(brightnessPercent + "%");
+        String brightnessText = brightnessPercent + "%";
+        mDialogBrightnessTextView.setText(brightnessText);
         mDialogBrightnessProgressBar.setProgress(brightnessPercent);
         onClickUiToggleToClear();
     }
